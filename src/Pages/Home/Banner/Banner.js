@@ -1,5 +1,4 @@
 import React from 'react';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import chair from '../../../images/chair.png';
 import bg from '../../../images/bg.png';
