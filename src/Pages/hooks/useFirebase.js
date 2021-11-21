@@ -12,7 +12,7 @@ const useFirebase = () => {
     const [token, setToken] = useState('');
     const auth = getAuth();
     const googleProvider = new GoogleAuthProvider();
-    const registerUser = (email, password, name, history) => {
+    const registerUser = (email, password, name, navigate) => {
         setIsLoading(true);
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
@@ -29,7 +29,7 @@ const useFirebase = () => {
                 }).catch((error) => {
 
                 });
-                history.replace('/');
+                navigate('/');
             })
             .catch((error) => {
                 setAuthError(error.message);
@@ -37,12 +37,12 @@ const useFirebase = () => {
             })
             .finally(() => setIsLoading(false));
     }
-    const loginUser = (email, password, location, history) => {
+    const loginUser = (email, password, location, navigate) => {
         setIsLoading(true);
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const destination = location?.state?.from || '/';
-                history.replace(destination);
+                navigate(destination);
                 setAuthError('');
             })
             .catch((error) => {
@@ -51,14 +51,14 @@ const useFirebase = () => {
             .finally(() => setIsLoading(false));
     }
 
-    const signInWithGoogle = (location, history) => {
+    const signInWithGoogle = (location, navigate) => {
         setIsLoading(true);
         signInWithPopup(auth, googleProvider)
             .then((result) => {
                 const user = result.user;
                 saveUser(user.email, user.displayName, "PUT");
                 const destination = location?.state?.from || '/';
-                history.replace(destination);
+                navigate(destination);
                 setAuthError('');
             }).catch((error) => {
                 setAuthError(error.message);
@@ -84,7 +84,7 @@ const useFirebase = () => {
     }, [auth]);
 
     useEffect(() => {
-        fetch(`https://intense-refuge-02623.herokuapp.com/users/${user.email}`)
+        fetch(`https://intense-refuge-02623.herokuapp.com/users/${user?.email}`)
             .then(res => res.json())
             .then(data => setAdmin(data.admin));
     }, [user.email])
